@@ -1,0 +1,29 @@
+# Build output directories
+build/
+bin/
+out/
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Compiled object files & libraries
+*.o
+*.obj
+*.dll
+*.so
+*.dylib
+*.a
+
+# CMake generated cache & files (if generated in root)
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# IDE / Editor specific settings
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/

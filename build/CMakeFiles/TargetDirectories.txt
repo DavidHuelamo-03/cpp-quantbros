@@ -1,4 +1,0 @@
-C:/Users/huela/OneDrive/Escritorio/QF/cpp-quantbros/build/CMakeFiles/quant_main.dir
-C:/Users/huela/OneDrive/Escritorio/QF/cpp-quantbros/build/CMakeFiles/run_tests.dir
-C:/Users/huela/OneDrive/Escritorio/QF/cpp-quantbros/build/CMakeFiles/edit_cache.dir
-C:/Users/huela/OneDrive/Escritorio/QF/cpp-quantbros/build/CMakeFiles/rebuild_cache.dir
