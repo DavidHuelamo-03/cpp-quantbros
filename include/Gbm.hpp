@@ -15,5 +15,6 @@ public:
     Gbm(double s, double v, const Environment& e);
     double get_spot() const;
     double get_vol() const;
-    std::vector<double> generate_path(double maturity, int steps, std::mt19937& rng) const override;
+    //TODO: Complete implementation: generate_path takes random shocks externally instead of generating them internally.
+    std::vector<double> generate_path(double maturity, int steps, std::vector<double> shocks) const override;
 };

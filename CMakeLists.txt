@@ -17,3 +17,8 @@ add_executable(quant_main src/main.cpp ${SRC_FILES})
 
 # Test Executable
 add_executable(run_tests tests/test_mc_pricer.cpp ${SRC_FILES})
+
+add_executable(test_StandardShockGenerator 
+    tests/test_StandardShockGenerator.cpp 
+    src/StandardShockGenerator.cpp
+)

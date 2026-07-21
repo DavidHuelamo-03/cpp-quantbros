@@ -1,34 +1,100 @@
 #pragma once
 
+#include <stdexcept>
+#include <sstream>
 #include <iostream>
-#include <cmath>
-#include <cstdlib>
+#include <stdlib.h>
+#include <cassert>
 
-#define ASSERT_APPROX_EQUAL(val1, val2, tol) \
-    do { \
-        if (std::abs((val1) - (val2)) > (tol)) { \
-            std::cerr << "Assertion failed: " << #val1 << " (" << (val1) \
-                      << ") and " << #val2 << " (" << (val2) \
-                      << ") differ by more than tolerance " << (tol) << std::endl; \
-            std::exit(EXIT_FAILURE); \
-        } \
-    } while(0)
+inline bool& getDebugFlagState() {
+    static bool debug_enabled = false;
+    return debug_enabled;
+}
 
-struct StandardMarketFixture {
-    Environment env;
-    double maturity = 1.0;
-    double strike = 100.0;
-    double spot = 100.0;
-    double vol = 0.2;
-    OptionType type = OptionType::Call;
+inline bool isDebugEnabled() {
+    return getDebugFlagState();
+}
 
-    EuropeanOption option;
-    Gbm gbm;
+inline void setDebugEnabled(bool enabled) {
+    getDebugFlagState() = enabled;
+}
 
-    StandardMarketFixture() 
-        : option(maturity, strike, type),
-          gbm(spot, vol, env) 
-    {
-        env.r = 0.05;
-    }
-};
+/*  Log an information statement */
+#define INFO( A ) { \
+    std::cerr << "INFO:\n" << __FILE__ <<":"<<__LINE__ << ":\n" << A <<"\n";\
+}
+
+#define TEST( f ) do {\
+    std::cerr<<"Calling "<<#f<<"()\n"; \
+    try { \
+        f(); \
+    } catch (...) { \
+        std::cerr<<"\n"; \
+        std::cerr<<"******* "<<#f<<"() FAILED. ********\n";\
+        std::cerr<<"\n"; \
+        exit(1); \
+    }\
+    std::cerr<<""<<#f<<"() passed.\n"; \
+    std::cerr<<"\n"; \
+} while (false)
+
+
+
+// on windows we define debug mode to be when _DEBUG is set
+#ifdef _DEBUG
+#define DEBUG_MODE 1
+#endif
+
+// on unix we define debug mode to be when _GLIBCXX is set
+#ifdef _GLIBCXX_DEBUG
+#define DEBUG_MODE 1
+#endif
+
+#ifdef DEBUG
+#define DEBUG_MODE 1
+#endif
+
+
+
+// our assertion macros behave differently in test mode
+// #ifndef DEBUG_MODE
+
+// #define DEBUG_PRINT( A )
+// #define ASSERT( c ) do {} while (0)
+// #define ASSERT_APPROX_EQUAL( x, y, tolerance ) do {} while (0)
+
+
+// #else
+/*  Write A to std:cerr so long as debug is enabled */
+#define DEBUG_PRINT( A ) { \
+    if (isDebugEnabled()) { \
+        std::cerr << "DEBUG:\n" << __FILE__ <<":"<<__LINE__ <<":\n"<< A <<"\n";\
+    } \
+}
+
+#define ASSERT( c ) do { \
+    if (!(c)) { \
+        std::stringstream testing_ss_; \
+		testing_ss_ << "ASSERTION FAILED \n"; \
+		testing_ss_ << __FILE__ << ":" << __LINE__ << ":\n" << #c; \
+		std::cerr << testing_ss_.str(); \
+		throw std::runtime_error(testing_ss_.str()); \
+    } \
+} while (false)
+
+#define ASSERT_APPROX_EQUAL( x, y, tolerance ) do {\
+    DEBUG_PRINT("x: " << x << " y: " << y << " tolerance: " << tolerance); \
+    if (!(fabs((x)-(y))<=(tolerance))) { \
+		std::stringstream testing_ss_; \
+		testing_ss_ << "ASSERTION FAILED \n"; \
+		testing_ss_ << "Expected " << (x) << "\n"; \
+		testing_ss_ << "Actual " << (y) << "\n"; \
+		testing_ss_ << __FILE__ << ":" << __LINE__ << ":\n"; \
+		std::cerr << testing_ss_.str(); \
+		throw std::runtime_error(testing_ss_.str()); \
+    } \
+} while (false)
+
+
+// #endif
+

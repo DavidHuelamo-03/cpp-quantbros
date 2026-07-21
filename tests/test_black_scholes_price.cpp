@@ -1,5 +1,6 @@
 #include "black_scholes_price.hpp"
 #include "testing.hpp"
+#include "StandardMarketFixture.hpp"
 
 void test_black_scholes_price(){
     StandardMarketFixture fx;
@@ -8,7 +9,6 @@ void test_black_scholes_price(){
 }
 
 int main() {
-    test_black_scholes_price();
-    std::cout << "Black-Scholes fixture test passed!" << std::endl;
+    TEST(test_black_scholes_price);
     return 0;
 }
