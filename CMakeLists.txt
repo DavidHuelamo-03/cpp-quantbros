@@ -12,11 +12,18 @@ file(GLOB SRC_FILES "src/*.cpp")
 # Exclude main.cpp from tests library so main() doesn't conflict
 list(REMOVE_ITEM SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
-# Main Executable
-add_executable(quant_main src/main.cpp ${SRC_FILES})
+add_executable(test_AntitheticShockGenerator
+    tests/test_AntitheticShockGenerator.cpp
+    src/AntitheticShockGenerator.cpp
+)
+
+add_executable(test_MonteCarloPricer
+    tests/test_MonteCarloPricer.cpp
+    ${SRC_FILES}
+)
 
 # Test Executable
-add_executable(run_tests tests/test_mc_pricer.cpp ${SRC_FILES})
+add_executable(run_tests tests/test_MonteCarloPricer.cpp ${SRC_FILES})
 
 add_executable(test_StandardShockGenerator 
     tests/test_StandardShockGenerator.cpp 

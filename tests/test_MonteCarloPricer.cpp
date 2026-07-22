@@ -7,15 +7,10 @@
 #include "EuropeanOption.hpp"
 #include "black_scholes_price.hpp"
 #include "StandardShockGenerator.hpp"
+#include "StandardMarketFixture.hpp"
 
 static void test_call_price_matches_black_scholes() {
-    Environment env;
-    env.r = 0.05;
-
-    const double maturity = 1.0;
-    const double strike = 100.0;
-    const double spot = 100.0;
-    const double vol = 0.2;
+    StandardMarketFixture fx;
 
     const int num_paths = 100000;
     const int steps = 252;
@@ -23,8 +18,8 @@ static void test_call_price_matches_black_scholes() {
     StandardShockGenerator gen;
     gen.reset(42);
 
-    EuropeanOption option(maturity, strike, OptionType::Call);
-    Gbm gbm(spot, vol, env);
+    EuropeanOption option(fx.maturity, fx.strike, fx.type);
+    Gbm gbm(fx.spot, fx.vol, fx.env);
     MonteCarloPricer pricer(num_paths, steps, gen);
 
     const double mc_price = pricer.run_mc(option, gbm);
